@@ -41,7 +41,10 @@ std::vector<at::Tensor> add_scalar_naive(std::vector<std::vector<at::Tensor>>& t
 }
 
 template<typename T, typename U, typename... ArgTypes>
-__global__ void multi_tensor_apply_kernel(
+__global__ void 
+__launch_bounds__(BLOCK_SIZE /*maxThreadsPerBlock*/,
+                  1          /*minBlocksPerMultiprocessor*/)
+multi_tensor_apply_kernel(
     int chunk_size,
     T tl,
     U callable,
