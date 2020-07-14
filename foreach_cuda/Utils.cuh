@@ -1,6 +1,4 @@
 #pragma once
-
-#include <iostream>
 #define ILP 4
 
 // TensorListMetadata has to be < 4KB - the limit for kernel launch argument
@@ -13,16 +11,15 @@ template<int n> struct TensorListMetadata
   int sizes[depth_to_max_tensors[n-1]];
   unsigned char block_to_tensor[depth_to_max_blocks[n-1]];
   int block_to_chunk[depth_to_max_blocks[n-1]];
-  //int start_tensor_this_launch;
 };
 
 template<typename T>
 __device__ __forceinline__ bool is_aligned(T* p){
-  return ((uint64_t)p) % (ILP*sizeof(T)) == 0;
+  return ((uint64_t)p) % (ILP * sizeof(T)) == 0;
 }
 
 template<typename T>
 __device__ __forceinline__ void load_store(T* dst, T* src, int dst_offset, int src_offset){
-  typedef typename std::aligned_storage<ILP*sizeof(T), ILP*alignof(T)>::type LT;
+  typedef typename std::aligned_storage<ILP * sizeof(T), ILP * alignof(T)>::type LT;
   ((LT*)dst)[dst_offset] = ((LT*)src)[src_offset];
 }
